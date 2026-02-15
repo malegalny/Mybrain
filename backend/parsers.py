@@ -2,6 +2,9 @@
 Assumptions:
 - Simple JSON uploads are either {"title": ..., "messages": [...]} or a top-level list of messages.
 - ChatGPT ZIP uploads include a conversations.json file following the mapping/current_node graph format.
+Assumption: uploaded JSON is either:
+1) {"title": "Optional Title", "messages": [{"role": "user", "content": "...", "timestamp": "..."}]}
+or 2) [{"role": "user", "content": "...", "timestamp": "..."}] as a top-level list.
 """
 
 from __future__ import annotations
@@ -21,6 +24,9 @@ class ParsedAttachmentRef:
     file_id: str | None
     file_name: str | None
     mime_type: str | None
+from dataclasses import dataclass
+from datetime import datetime
+import json
 
 
 @dataclass
@@ -47,6 +53,7 @@ def _iso_or_now(value: Any) -> str:
     if isinstance(value, str) and value.strip():
         return value
     return datetime.utcnow().isoformat()
+    messages: list[ParsedMessage]
 
 
 def parse_chat_export(raw_bytes: bytes, fallback_title: str) -> ParsedConversation:
@@ -202,3 +209,4 @@ def parse_chatgpt_conversations(raw_bytes: bytes) -> list[ParsedConversation]:
         )
 
     return parsed_conversations
+    return ParsedConversation(title=title, messages=normalized)

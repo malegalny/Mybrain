@@ -11,6 +11,14 @@ from fastapi.staticfiles import StaticFiles
 from db import MEDIA_DIR, get_db, init_db
 from models import Attachment, ConversationDetail, ConversationSummary, Message, SearchResult
 from parsers import parse_chat_export, parse_chatgpt_conversations
+from pathlib import Path
+
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+
+from db import get_db, init_db
+from models import ConversationDetail, ConversationSummary, Message, SearchResult
+from parsers import parse_chat_export
 
 app = FastAPI(title="AI Chat Archive API")
 
@@ -206,6 +214,43 @@ async def upload_chat_exports(files: list[UploadFile] = File(...)):
                 raise
             except Exception as exc:
                 raise HTTPException(status_code=400, detail=f"Failed to parse {file_name}: {exc}") from exc
+
+@app.post("/api/upload")
+async def upload_chat_exports(files: list[UploadFile] = File(...)):
+    created_ids: list[int] = []
+
+    with get_db() as conn:
+        for upload in files:
+            if not upload.filename or not upload.filename.lower().endswith(".json"):
+                raise HTTPException(status_code=400, detail="Only JSON files are supported")
+
+            raw = await upload.read()
+            try:
+                parsed = parse_chat_export(raw, fallback_title=Path(upload.filename).stem)
+            except Exception as exc:
+                raise HTTPException(status_code=400, detail=f"Failed to parse {upload.filename}: {exc}") from exc
+
+            now = datetime.utcnow().isoformat()
+            cursor = conn.execute(
+                """
+                INSERT INTO conversations (title, source, created_at, updated_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (parsed.title, upload.filename, now, now),
+            )
+            conversation_id = cursor.lastrowid
+            created_ids.append(conversation_id)
+
+            conn.executemany(
+                """
+                INSERT INTO messages (conversation_id, role, content, timestamp)
+                VALUES (?, ?, ?, ?)
+                """,
+                [
+                    (conversation_id, message.role, message.content, message.timestamp)
+                    for message in parsed.messages
+                ],
+            )
 
     return {"created_conversation_ids": created_ids, "count": len(created_ids)}
 

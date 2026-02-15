@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Attachment, ConversationDetail as ConversationDetailType } from './types'
+import { useEffect } from 'react'
+import { ConversationDetail as ConversationDetailType } from './types'
 
 type Props = {
   conversation: ConversationDetailType | null
@@ -12,6 +14,9 @@ const BACKEND_BASE = 'http://localhost:8000'
 export default function ConversationDetail({ conversation, highlightedMessageId, apiBase }: Props) {
   const [attachments, setAttachments] = useState<Attachment[]>([])
 
+}
+
+export default function ConversationDetail({ conversation, highlightedMessageId }: Props) {
   useEffect(() => {
     if (!highlightedMessageId) return
 

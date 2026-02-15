@@ -9,6 +9,9 @@ MEDIA_DIR = Path(__file__).resolve().parent.parent / "media"
 def init_db() -> None:
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
+
+
+def init_db() -> None:
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute("PRAGMA foreign_keys = ON;")
         conn.execute(
