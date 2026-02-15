@@ -28,3 +28,14 @@ export type SearchResult = {
   snippet: string
   timestamp: string
 }
+
+export type Attachment = {
+  id: number
+  conversation_id: number
+  message_id: number | null
+  file_id: string | null
+  file_name: string
+  mime_type: string | null
+  local_path: string
+  created_at: string
+}

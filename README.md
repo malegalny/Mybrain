@@ -26,6 +26,8 @@ ai-chat-archive/
 │           ├── ConversationList.tsx
 │           ├── SearchPanel.tsx
 │           └── types.ts
+├── chat_archive.db (created at runtime)
+└── media/ (created at runtime for ZIP attachments)
 └── chat_archive.db (created at runtime)
 ```
 
@@ -52,6 +54,8 @@ npm run dev -- --host 0.0.0.0 --port 5173
 - Endpoint: `POST /api/upload`
 - Content-Type: `multipart/form-data`
 - Field name: `files`
+- Accepts one or more `.json` files and `.zip` files.
+- ZIP uploads should be full OpenAI ChatGPT data exports that include `conversations.json`.
 - Accepts one or more `.json` files.
 
 ## Example JSON upload format
@@ -91,4 +95,7 @@ Also supported:
 - `POST /api/upload`
 - `GET /api/conversations`
 - `GET /api/conversations/{id}`
+- `GET /api/conversations/{id}/attachments`
+- `GET /api/search?query=keyword`
+- Static media: `GET /media/{file}`
 - `GET /api/search?query=keyword`

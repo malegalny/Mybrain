@@ -65,6 +65,7 @@ export default function App() {
       <aside>
         <div className="panel upload-panel">
           <h1>AI Chat Archive</h1>
+          <input type="file" accept="application/json,.zip,application/zip" multiple onChange={handleUpload} />
           <input type="file" accept="application/json" multiple onChange={handleUpload} />
         </div>
         <ConversationList
@@ -78,6 +79,7 @@ export default function App() {
       </aside>
       <main>
         <SearchPanel onSearch={handleSearch} onResultClick={handleResultClick} />
+        <ConversationDetail conversation={selectedConversation} highlightedMessageId={highlightedMessageId} apiBase={API_BASE} />
         <ConversationDetail conversation={selectedConversation} highlightedMessageId={highlightedMessageId} />
       </main>
     </div>
