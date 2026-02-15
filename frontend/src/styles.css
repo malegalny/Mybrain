@@ -1,0 +1,126 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  color: #111827;
+  background: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: 100vh;
+  gap: 12px;
+  padding: 12px;
+}
+
+aside,
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.left-pane {
+  overflow: auto;
+}
+
+.conversation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.conversation-list button {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.conversation-list button.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 8px;
+}
+
+.search-results ul {
+  list-style: none;
+  padding: 0;
+}
+
+.search-results button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.right-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.messages {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.message.user {
+  background: #eef2ff;
+}
+
+.message.assistant {
+  background: #ecfdf5;
+}
+
+.message.highlighted {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+.message header {
+  display: flex;
+  justify-content: space-between;
+}
